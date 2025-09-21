@@ -132,7 +132,7 @@ const FeaturedProjects = () => {
                         {project.title}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        Professional {project.category.toLowerCase()} solution
+                        {project.category}
                       </p>
                     </CardContent>
                   </Card>

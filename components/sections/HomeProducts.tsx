@@ -97,6 +97,7 @@ export function ProductsSection() {
                       </div>
                     ))}
                   </div>
+                  <Link href="/products">
                   <Button
                     variant="outline"
                     className="w-full group-hover:bg-primary-foreground group-hover:text-primary transition-colors duration-300 bg-transparent"
@@ -104,6 +105,7 @@ export function ProductsSection() {
                     Learn More
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
                   </Button>
+                  </Link>
                 </CardContent>
               </Card>
             </motion.div>

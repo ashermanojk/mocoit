@@ -12,44 +12,68 @@ const portfolioProjects = [
     title: "Cloud Counting",
     category: "Business Platform",
     image: "/portfolio-images/cloudcounting.png",
-    status: "Live"
   },
   {
     title: "Curious School",
     category: "E-Learning Platform", 
     image: "/portfolio-images/curious-school.png",
-    status: "Live"
   },
   {
     title: "Indus Motors",
     category: "Automotive Website",
     image: "/portfolio-images/indus-motors.png", 
-    status: "Live"
   },
   {
     title: "Legal Conclave",
     category: "Professional Network",
     image: "/portfolio-images/legal-conclave.png",
-    status: "Live"
   },
   {
     title: "Rescue Services",
     category: "Emergency Platform",
     image: "/portfolio-images/rescue.png",
-    status: "Live"
   },
   {
     title: "Royal Beauty",
     category: "E-commerce",
     image: "/portfolio-images/Royal.jpg",
-    status: "Live"
   },
   {
     title: "SpatoGo",
     category: "Service Platform",
     image: "/portfolio-images/spatogo.png",
-    status: "Live"
-  }
+  },
+  {
+    title: "1524",
+    category: "Hospitality",
+    image: "/portfolio-images/1524-delhi.png",
+  },
+  {
+    title: "abaran",
+    category: "E-commerce",
+    image: "/portfolio-images/abaran.png",
+  },
+  {
+    title: "CGH Earth",
+    category: "Hospitality and Healthcare",
+    image: "/portfolio-images/cgh-earth.png",
+  },
+  {
+    title: "Compliance",
+    category: "Service Platform",
+    image: "/portfolio-images/compliance.png",
+  },
+  {
+    title: "Compliance Global",
+    category: "Service Platform",
+    image: "/portfolio-images/complianceglobal.png",
+  },
+  {
+    title: "G4 Gaming",
+    category: "Service Platform",
+    image: "/portfolio-images/g4.jpg",
+  },
+  
 ]
 
 const FeaturedProjects = () => {
@@ -116,14 +140,6 @@ const FeaturedProjects = () => {
                       <div className="absolute top-4 left-4">
                         <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm">
                           {project.category}
-                        </Badge>
-                      </div>
-                      <div className="absolute top-4 right-4">
-                        <Badge 
-                          variant="outline" 
-                          className="border-green-500 text-green-700 bg-background/90 backdrop-blur-sm"
-                        >
-                          {project.status}
                         </Badge>
                       </div>
                     </div>

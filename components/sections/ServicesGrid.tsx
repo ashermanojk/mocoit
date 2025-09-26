@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Smartphone, Monitor, Settings, ArrowRight, CheckCircle } from "lucide-react"
-
+import Link from "next/link"
 export default function ServicesSection() {
   const serviceCategories = [
     {
@@ -187,13 +187,17 @@ export default function ServicesSection() {
                 experiences, adapting swiftly to evolving needs.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
-                  Start Your Project
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <Button variant="outline" size="lg">
+                <Link href="/contact" className="no-underline">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90">
+                    Start Your Project
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/contact" className="no-underline">
+                  <Button variant="outline" size="lg">
                   Schedule Consultation
                 </Button>
+                </Link>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-6">

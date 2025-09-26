@@ -9,10 +9,6 @@ import {
   Phone, 
   Mail, 
   Clock, 
-  Globe, 
-  Linkedin, 
-  Twitter,
-  MessageCircle
 } from 'lucide-react'
 
 const contactDetails = [

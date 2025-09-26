@@ -3,6 +3,7 @@
 
 import React from 'react'
 import { MessageCircle } from 'lucide-react'
+import Link from 'next/link'
 const ServicesCallToAction = () => {
   return (
     <section className="py-20 lg:py-32 bg-gradient-to-r from-primary to-primary/80 relative overflow-hidden">
@@ -18,10 +19,12 @@ const ServicesCallToAction = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="border-2 border-primary-foreground text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary-foreground hover:text-primary transition-all duration-300 flex items-center group">
-              <MessageCircle className="mr-2 w-5 h-5" />
-              Discuss Your Project
-            </button>
+            <Link href="/contact" className="no-underline">
+              <button className="border-2 border-primary-foreground text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary-foreground hover:text-primary transition-all duration-300 flex items-center group">
+                <MessageCircle className="mr-2 w-5 h-5" />
+                Discuss Your Project
+              </button>
+            </Link>
           </div>
           
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-primary-foreground/80">

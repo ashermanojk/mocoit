@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Factory, Smartphone, Building2, ArrowRight } from "lucide-react"
-
+import Link from "next/link"
 export default function IndustriesSection() {
   const industries = [
     {
@@ -131,10 +131,12 @@ export default function IndustriesSection() {
           </div>
 
           <div className="text-center">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              Get in Touch!
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link href="/contact" className="no-underline">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">
+                Get in Touch!
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>

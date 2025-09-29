@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 
 const contactDetails = [
-  {
+  /* {
     icon: MapPin,
     title: "Office Address",
     details: [
@@ -22,14 +22,13 @@ const contactDetails = [
       "Kunnumpuram - 400069",
       "Kakkanad, Kerala, India"
     ]
-  },
+  }, */
   {
     icon: Phone,
     title: "Phone Numbers",
     details: [
-      "+91 63661 05263 (Primary)",
-      "+91 94466 25898 (Secondary)",
-      "+91 63661 05263 (WhatsApp)"
+      "+91 63661 05263",
+      "+91 72592 68801",
     ]
   },
   {

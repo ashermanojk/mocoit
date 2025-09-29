@@ -117,7 +117,7 @@ export function Footer() {
               viewport={{ once: true }}
             >
               <p className="text-muted-foreground text-sm">
-                © 2024 MOCOIT Labs LLP. All rights reserved.
+                Copyright © MOCOIT Labs LLP - All Rights Reserved
               </p>
             </motion.div>
             <motion.div

@@ -3,7 +3,6 @@
 import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Linkedin, Mail } from "lucide-react"
 
 export default function LeadershipSection() {
   const leaders = [
@@ -80,16 +79,6 @@ export default function LeadershipSection() {
                   <p className="text-muted-foreground leading-relaxed mb-6">
                     {leader.description}
                   </p>
-
-                  {/* Contact Icons */}
-                  <div className="flex justify-center gap-3 pt-4 border-t border-border/50">
-                    <div className="w-10 h-10 bg-muted/50 hover:bg-primary/10 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 cursor-pointer group/icon">
-                      <Linkedin className="w-5 h-5 text-muted-foreground group-hover/icon:text-primary" />
-                    </div>
-                    <div className="w-10 h-10 bg-muted/50 hover:bg-primary/10 rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 cursor-pointer group/icon">
-                      <Mail className="w-5 h-5 text-muted-foreground group-hover/icon:text-primary" />
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </motion.div>

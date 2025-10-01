@@ -15,10 +15,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Send, CheckCircle } from 'lucide-react'
+import { Send, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
+
+interface FormState {
+  status: 'idle' | 'loading' | 'success' | 'error'
+  message?: string
+}
 
 const ContactForm = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [formState, setFormState] = useState<FormState>({ status: 'idle' })
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,6 +36,9 @@ const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Set loading state immediately
+    setFormState({ status: 'loading' })
+
     try {
       const response = await fetch('/api/send-mail', {
         method: 'POST',
@@ -41,15 +49,19 @@ const ContactForm = () => {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to send message')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
       }
 
       console.log('Emails sent successfully')
-      setIsSubmitted(true)
+      setFormState({ 
+        status: 'success',
+        message: 'Thank you for reaching out. We\'ll get back to you within 24 hours.'
+      })
 
-      // Reset form after 3 seconds
+      // Reset form after 5 seconds
       setTimeout(() => {
-        setIsSubmitted(false)
+        setFormState({ status: 'idle' })
         setFormData({
           name: '',
           email: '',
@@ -58,20 +70,35 @@ const ContactForm = () => {
           service: '',
           message: ''
         })
-      }, 3000)
+      }, 5000)
+
     } catch (error) {
       console.error('Error sending message:', error)
-      // You might want to show an error state here
-      alert('Failed to send message. Please try again.')
+      setFormState({ 
+        status: 'error',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Failed to send message. Please try again.'
+      })
+
+      // Clear error state after 5 seconds
+      setTimeout(() => {
+        setFormState({ status: 'idle' })
+      }, 5000)
     }
   }
 
-
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    // Only allow changes when not loading or in success state
+    if (formState.status !== 'loading' && formState.status !== 'success') {
+      setFormData(prev => ({ ...prev, [field]: value }))
+    }
   }
 
-  if (isSubmitted) {
+  const isDisabled = formState.status === 'loading' || formState.status === 'success'
+
+  // Success state
+  if (formState.status === 'success') {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
@@ -83,14 +110,42 @@ const ContactForm = () => {
           Message Sent Successfully!
         </h3>
         <p className="text-green-700 dark:text-green-300">
-          Thank you for reaching out. We&apos;ll get back to you within 24 hours.
+          {formState.message}
         </p>
       </motion.div>
     )
   }
 
+  // Error state
+  if (formState.status === 'error') {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-8 text-center"
+      >
+        <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+        <h3 className="text-2xl font-bold text-red-800 dark:text-red-400 mb-2">
+          Failed to Send Message
+        </h3>
+        <p className="text-red-700 dark:text-red-300 mb-4">
+          {formState.message}
+        </p>
+        <Button 
+          onClick={() => setFormState({ status: 'idle' })}
+          variant="outline"
+          className="border-red-200 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/20"
+        >
+          Try Again
+        </Button>
+      </motion.div>
+    )
+  }
+
   return (
-    <Card className="border-0 bg-card/50 backdrop-blur-sm">
+    <Card className={`border-0 bg-card/50 backdrop-blur-sm transition-opacity duration-200 ${
+      formState.status === 'loading' ? 'opacity-75' : 'opacity-100'
+    }`}>
       <CardHeader>
         <CardTitle className="text-2xl">Start Your Project</CardTitle>
         <p className="text-muted-foreground">
@@ -107,6 +162,7 @@ const ContactForm = () => {
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 placeholder="John Doe"
+                disabled={isDisabled}
                 required
               />
             </div>
@@ -118,6 +174,7 @@ const ContactForm = () => {
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
                 placeholder="john@example.com"
+                disabled={isDisabled}
                 required
               />
             </div>
@@ -131,6 +188,7 @@ const ContactForm = () => {
                 value={formData.phone}
                 onChange={(e) => handleChange('phone', e.target.value)}
                 placeholder="+91 98765 43210"
+                disabled={isDisabled}
               />
             </div>
             <div className="space-y-2">
@@ -140,6 +198,7 @@ const ContactForm = () => {
                 value={formData.company}
                 onChange={(e) => handleChange('company', e.target.value)}
                 placeholder="Your Company"
+                disabled={isDisabled}
               />
             </div>
           </div>
@@ -147,7 +206,11 @@ const ContactForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label>Service Interested In</Label>
-              <Select value={formData.service} onValueChange={(value) => handleChange('service', value)}>
+              <Select 
+                value={formData.service} 
+                onValueChange={(value) => handleChange('service', value)}
+                disabled={isDisabled}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a service" />
                 </SelectTrigger>
@@ -172,14 +235,45 @@ const ContactForm = () => {
               onChange={(e) => handleChange('message', e.target.value)}
               placeholder="Tell us about your project requirements, goals, and timeline..."
               rows={5}
+              disabled={isDisabled}
               required
             />
           </div>
 
-          <Button type="submit" size="lg" className="w-full">
-            Send Message
-            <Send className="ml-2 w-4 h-4" />
+          <Button 
+            type="submit" 
+            size="lg" 
+            className="w-full" 
+            disabled={isDisabled}
+          >
+            {formState.status === 'loading' ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending Message...
+              </>
+            ) : (
+              <>
+                Send Message
+                <Send className="ml-2 w-4 h-4" />
+              </>
+            )}
           </Button>
+
+          {/* Loading state overlay for visual feedback */}
+          {formState.status === 'loading' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-background/50 backdrop-blur-sm rounded-lg flex items-center justify-center"
+            >
+              <div className="bg-background border rounded-lg p-4 shadow-lg">
+                <div className="flex items-center space-x-3">
+                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  <span className="text-sm font-medium">Sending your message...</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </form>
       </CardContent>
     </Card>

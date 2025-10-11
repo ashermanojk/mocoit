@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     const { data: adminData, error: adminError } = await resend.emails.send({
       from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
       to: process.env.ADMIN_EMAIL!,
+      replyTo: `${email}`, 
       subject: `🔔 New Contact Form Submission from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

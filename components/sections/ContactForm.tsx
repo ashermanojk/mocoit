@@ -30,7 +30,8 @@ const ContactForm = () => {
     phone: '',
     company: '',
     service: '',
-    message: ''
+    message: '',
+    website: '' // Honeypot field
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,7 +69,8 @@ const ContactForm = () => {
           phone: '',
           company: '',
           service: '',
-          message: ''
+          message: '',
+          website: ''
         })
       }, 5000)
 
@@ -154,6 +156,19 @@ const ContactForm = () => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Honeypot field - visually hidden from users, but visible to bots */}
+          <div className="hidden" aria-hidden="true" style={{ display: 'none', position: 'absolute', left: '-9999px' }}>
+            <Label htmlFor="website">Website Portfolio</Label>
+            <Input
+              id="website"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData.website}
+              onChange={(e) => handleChange('website', e.target.value)}
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name *</Label>

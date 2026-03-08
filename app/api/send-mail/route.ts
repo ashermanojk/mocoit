@@ -3,9 +3,74 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Simple in-memory rate limiting
+const rateLimit = new Map<string, { count: number; timestamp: number }>();
+const RATE_LIMIT_DURATION = 3600000; // 1 hour
+const MAX_REQUESTS = 5; // Max 5 requests per hour from same IP
+
 export async function POST(request: NextRequest) {
+  // Extract IP for rate limiting
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const now = Date.now();
+  
+  if (ip !== 'unknown') {
+    const userRateData = rateLimit.get(ip);
+    if (userRateData) {
+      if (now - userRateData.timestamp < RATE_LIMIT_DURATION) {
+        if (userRateData.count >= MAX_REQUESTS) {
+          return NextResponse.json(
+            { message: 'Too many requests. Please try again later.' },
+            { status: 429 }
+          );
+        }
+        userRateData.count++;
+      } else {
+        rateLimit.set(ip, { count: 1, timestamp: now });
+      }
+    } else {
+      rateLimit.set(ip, { count: 1, timestamp: now });
+    }
+
+    // Clean up old rate limit entries periodically to prevent memory leaks
+    if (rateLimit.size > 1000) {
+      const oldestAllowed = now - RATE_LIMIT_DURATION;
+      for (const [key, value] of rateLimit.entries()) {
+        if (value.timestamp < oldestAllowed) {
+          rateLimit.delete(key);
+        }
+      }
+    }
+  }
   const body = await request.json();
-  const { name, email, phone, company, service, message } = body;
+  const { name, email, phone, company, service, message, website } = body;
+
+  // Honeypot check - bots often fill all fields
+  if (website) {
+    // Return a fake success response to trick the bot
+    return NextResponse.json(
+      { 
+        message: 'Emails sent successfully',
+        adminEmailId: 'fake_id_bot_caught',
+        userEmailId: 'fake_id_bot_caught'
+      },
+      { status: 200 }
+    );
+  }
+
+  // Input length validation to prevent massive payloads and basic bot patterns
+  if (
+    (name && name.length > 100) ||
+    (email && email.length > 150) ||
+    (phone && phone.length > 50) ||
+    (company && company.length > 100) ||
+    (service && service.length > 100) ||
+    (message && message.length > 5000)
+  ) {
+    return NextResponse.json(
+      { message: 'Input length exceeded limits' },
+      { status: 400 }
+    );
+  }
 
   // Validate required fields
   if (!name || !email || !message) {
